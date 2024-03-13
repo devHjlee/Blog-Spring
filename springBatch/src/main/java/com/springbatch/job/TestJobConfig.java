@@ -13,11 +13,10 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Transactional;
+
 
 @Slf4j
 @Configuration
-@Transactional
 public class TestJobConfig {
     @Bean
     public Job testJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
