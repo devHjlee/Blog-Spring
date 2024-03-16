@@ -14,10 +14,10 @@ import java.io.Serializable;
 @NoArgsConstructor( access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-public class FavoriteMenu implements Serializable{
+public class FavoriteMenu implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     private String userId;
     private String menuName;

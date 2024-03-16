@@ -35,8 +35,9 @@
 * mysql-connector-j
 
 
-## 프로젝트 구조
-![img0.png](img0.png)
+## 프로젝트 구조   
+
+![4.png](4.png)
 
 ### 예제 소스
 #### RedisConfig
@@ -65,27 +66,35 @@ public class RedisConfig {
         return redisTemplate;
     }
 }
-```
+```   
 
-#### SpringcacheApplication
-* @EnableCaching 추가
-``` java
-@SpringBootApplication
+#### RedisCacheConfig
+* Redis 캐시 매니저 설정
+* Spring Boot 가 기본적으로 RedisCacheManager 를 자동 설정해줘서 RedisCacheConfiguration 없어도 사용 가능
+``` java   
+@Configuration
 @EnableCaching
-public class SpringcacheApplication {
+public class RedisCacheConfig {
 
-    public static void main(String[] args) {
-        SpringApplication.run(SpringcacheApplication.class, args);
+    @Bean
+    public CacheManager contentCacheManager(RedisConnectionFactory cf) {
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                .entryTtl(Duration.ofMinutes(3L));
+
+        return RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf).cacheDefaults(redisCacheConfiguration).build();
     }
-
-}
-```
+}   
+```   
 
 #### FavoriteMenuService
 * @Cacheable
   * 메서드의 결과를 캐시에 저장하고, 같은 입력 매개변수가 주어졌을 때 캐시에서 결과를 반환합니다. 메서드가 호출될 때마다 캐시에 저장된 결과를 확인하고, 이미 캐시에 있는 경우에는 해당 결과를 반환하고, 없는 경우에는 메서드를 실행하여 결과를 캐시에 저장하고 반환합니다. 이러한 방식으로 이후 동일한 입력에 대한 호출은 캐시된 결과를 반환하여 메서드 실행을 생략할 수 있습니다.
 * @CacheEvict
   * 지정된 캐시를 비워서 캐시된 데이터를 갱신하거나 삭제하는 데 사용됩니다. 메서드 실행 후에 지정된 캐시를 비웁니다. 이것은 데이터 변경이 발생했을 때 기존 캐시를 갱신하기 위해 사용됩니다.
+* @CachePut
+  * 메서드의 결과를 캐시에 저장하는 데 사용됩니다. 이 어노테이션을 사용하면 메서드가 실행될 때마다 캐시에 새로운 결과를 저장하게 됩니다. 따라서 메서드의 결과를 캐시에 갱신하는 데 사용됩니다.
 ``` java   
 @Slf4j
 @Service
@@ -148,15 +157,15 @@ class FavoriteMenuServiceTest {
 ```   
 
 ### DB 조회와 Redis 에 대한 단순 성능 비교
-* DB 조회
-  ![img1.png](img1.png)
-    * 17초...
-* Redis 조회
-  ![img2.png](img2.png)
-    * 16초...
-* identityJDBCBatch()
-  ![img3.png](img3.png)
-    * 0.5초
 
+* 하나의 테이블 1000건 데이터 조회에 대한 비교지만 DB를 통해 가져올시 최소 7ms에서 Cacheable 을 통해 Redis 에서 조회시 4ms로 차이가 있다.
+* DB 조회   
+  ![1.png](1.png)
 
+* Redis 조회    
+  ![2.png](2.png)
 
+* 새로운 데이터 추가(CacheEvict)로 Redis에 기존 키 삭제   
+  ![3.png](3.png)
+
+ 
