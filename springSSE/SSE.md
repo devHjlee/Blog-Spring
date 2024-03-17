@@ -27,7 +27,7 @@ Spring 프레임워크에서는 SSE를 지원하기 위한 간단한 API를 제�
 
     
 ## 예제소스
-### [https://github.com/devHjlee/devHjBlog/tree/main/springJpaBulk](https://github.com/devHjlee/Blog-Spring/tree/master/springSSE)
+### [https://github.com/devHjlee/Blog-Spring/tree/master/springSSE](https://github.com/devHjlee/Blog-Spring/tree/master/springSSE)
 
 ## 개발환경
 * spring boot : 3.2.3
