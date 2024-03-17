@@ -65,6 +65,11 @@ gzip_vary on;
 
 ```   
 
+#### Aws CloudFront    
+* 동작 -> 편집
+  ![cf1.png](cf1.png)
+* 
+  ![cf2.png](cf2.png)
 
 
 #### Test
