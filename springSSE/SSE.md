@@ -36,7 +36,7 @@ Spring 프레임워크에서는 SSE를 지원하기 위한 간단한 API를 제�
 
 ## 프로젝트 구조   
 
-![4.png](4.png)
+![2.png](2.png)
 
 ### 예제 소스
 #### 흐름 설명
@@ -143,14 +143,14 @@ public class SSEController {
 ```
 
 #### Test 
-* 하나의 테이블 1000건 데이터 조회에 대한 비교지만 DB를 통해 가져올시 최소 7ms에서 Cacheable 을 통해 Redis 에서 조회시 4ms로 차이가 있다.
-* DB 조회   
-  ![1.png](1.png)
+* 브라우저에서 각각 UserID: test1, test2 로 /v1/subscribe 를 통해 구독
+  ![5.png](5.png)   
 
-* Redis 조회    
-  ![2.png](2.png)
+* /v1/subscribe/send 를 통해 test1 유저한테만 발행   
+  ![4.png](4.png)
 
-* 새로운 데이터 추가(CacheEvict)로 Redis에 기존 키 삭제   
+* test1 유저가 연결된 브라우저에만 실질적인 메시지가 전달
   ![3.png](3.png)
+
 
  

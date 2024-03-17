@@ -15,7 +15,7 @@ public class SSEController {
 
     private final SseEmitterService sseEmitterService;
 
-    @GetMapping(path = "/v1/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(path = "/v1/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE+ ";charset=UTF-8")
     public ResponseEntity<SseEmitter> subscribe(@RequestParam String userId) {
         SseEmitter emitter = sseEmitterService.subscribe(userId);
         return ResponseEntity.ok(emitter);

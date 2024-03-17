@@ -41,7 +41,7 @@ public class SseEmitterService {
         emitterMap.put(userId, emitter);
 
         try {
-            emitter.send(sseEventBuilder("subscribe",userId,"구독 되었습니다.")); //503 방지를위한 더미데이터
+            emitter.send(sseEventBuilder("subscribe",userId,"Subscribed successfully.")); //503 방지를위한 더미데이터
         } catch (IOException e) {
             log.error("IOException : , {}", e.getMessage());
         }
@@ -52,7 +52,7 @@ public class SseEmitterService {
         SseEmitter emitter = emitterMap.get(userId);
         if(emitter != null) {
             try {
-                emitter.send(sseEventBuilder("publish",userId,"주문 상태가 변경 됐습니다."));
+                emitter.send(sseEventBuilder("publish",userId,"Order status has been changed."));
                 log.info("publish userId : {}", userId);
             } catch (IOException e) {
                 log.error("IOException : {}", e.getMessage());
