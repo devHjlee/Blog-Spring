@@ -25,7 +25,7 @@ gzip 압축... 그게 뭔지 모르니 우선 검색을 통해 알게 되었고 
 
 ## 프로젝트 구조
 
-![2.png](2.png)
+![5.png](5.png)
 
 ### 예제 소스
 #### Spring Boot application.properteis
