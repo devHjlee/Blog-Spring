@@ -18,9 +18,9 @@ public class TestController {
     private final JobRegistry jobRegistry;
 
     @RequestMapping("/test")
-    public String handle(@RequestParam String jobName) throws Exception {
+    public String handle(@RequestParam String jobName,@RequestParam String reqDt) throws Exception {
         Job processJob = jobRegistry.getJob(jobName);
-        JobParameters jobParameters = new JobParametersBuilder().toJobParameters();
+        JobParameters jobParameters = new JobParametersBuilder().addString("reqDt",reqDt).toJobParameters();
 
         jobLauncher.run(processJob, jobParameters);
 

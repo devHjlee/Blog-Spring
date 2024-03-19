@@ -18,11 +18,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
 @Configuration
-public class JobFlowConfig {
+public class FlowJobConfig {
 
     @Bean
-    public Job jobFlow(JobRepository jobRepository, Step stepOne, Step stepTwo, Step stepThree) {
-        return new JobBuilder("jobFlow", jobRepository)
+    public Job flowJob(JobRepository jobRepository, Step stepOne, Step stepTwo, Step stepThree) {
+        return new JobBuilder("flowJob", jobRepository)
                 .start(stepOne)
                 .on("*")
                 .to(stepTwo)
@@ -34,9 +34,9 @@ public class JobFlowConfig {
     @Bean
     @JobScope
     public Step stepOne(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("jobFlowStepOne", jobRepository)
+        return new StepBuilder("flowJob_stepOne", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
-                    log.info(">>>>> This is JobFlowStepOne {}",requestDate);
+                    log.info(">>>>> This is flowJob_stepOne {}",requestDate);
 
                     contribution.setExitStatus(ExitStatus.FAILED);
 
@@ -48,9 +48,9 @@ public class JobFlowConfig {
     @Bean
     @JobScope
     public Step stepTwo(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("jobFlowStepTwo", jobRepository)
+        return new StepBuilder("flowJob_stepTwo", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
-                    log.info(">>>>> This is jobFlowStepTwo {}",requestDate);
+                    log.info(">>>>> This is flowJob_stepTwo {}",requestDate);
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
@@ -60,9 +60,9 @@ public class JobFlowConfig {
     @Bean
     @JobScope
     public Step stepThree(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("jobFlowStepThree", jobRepository)
+        return new StepBuilder("flowJob_stepThree", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
-                    log.info(">>>>> This is jobFlowStepThree {}",requestDate);
+                    log.info(">>>>> This is flowJob_stepThree {}",requestDate);
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
