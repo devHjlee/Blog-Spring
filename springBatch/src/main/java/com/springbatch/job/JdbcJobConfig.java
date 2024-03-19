@@ -10,6 +10,8 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.Chunk;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
@@ -22,6 +24,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -40,7 +44,7 @@ public class JdbcJobConfig {
 
     @Bean
     @JobScope
-    public Step jdbcStep(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Step jdbcStep(@Value("#{jobParameters[reqDt]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("jdbcStep", jobRepository)
                 .<BatchDto,BatchDto>chunk(chunkSize,transactionManager)
                 .reader(jdbcItemReader())
@@ -56,32 +60,32 @@ public class JdbcJobConfig {
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(BatchDto.class))
                 .sql("SELECT id, name FROM BATCH_TEST")
-                //.preparedStatementSetter(new ArgumentPreparedStatementSetter(new String[]{"aaa", "bbb"}))
                 .name("jdbcItemReader")
+                .build();
+    }
+
+    @Bean
+    public JdbcBatchItemWriter<BatchDto> jdbcItemWriter() {
+        String sql = "UPDATE BATCH_TEST set name = ? where id = ?";
+        return new JdbcBatchItemWriterBuilder<BatchDto>().dataSource(dataSource)
+                .sql(sql)
+                .itemPreparedStatementSetter((item, ps) -> {
+                    ps.setString(1, "SYSTEM");
+                    ps.setLong(2, item.getId());
+                })
+
+                .assertUpdates(true)
                 .build();
     }
 
 //    @Bean
 //    public JdbcBatchItemWriter<BatchDto> jdbcItemWriter() {
-//        String sql = "UPDATE BATCH_TEST set name = ? where id = ?";
+//        String sql = "UPDATE BATCH_TEST set name = '3' where id = :id";
 //        return new JdbcBatchItemWriterBuilder<BatchDto>().dataSource(dataSource)
 //                .sql(sql)
-//                .itemPreparedStatementSetter((item, ps) -> {
-//                    ps.setString(1, "SYSTEM");
-//                    ps.setLong(2, item.getId());
-//                })
-//
+//                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
 //                .assertUpdates(true)
 //                .build();
 //    }
 
-    @Bean
-    public JdbcBatchItemWriter<BatchDto> jdbcItemWriter() {
-        String sql = "UPDATE BATCH_TEST set name = '3' where id = :id";
-        return new JdbcBatchItemWriterBuilder<BatchDto>().dataSource(dataSource)
-                .sql(sql)
-                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .assertUpdates(true)
-                .build();
-    }
 }

@@ -33,7 +33,7 @@ public class FlowJobConfig {
 
     @Bean
     @JobScope
-    public Step stepOne(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Step stepOne(@Value("#{jobParameters[reqDt]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("flowJob_stepOne", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
                     log.info(">>>>> This is flowJob_stepOne {}",requestDate);
@@ -47,7 +47,7 @@ public class FlowJobConfig {
 
     @Bean
     @JobScope
-    public Step stepTwo(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Step stepTwo(@Value("#{jobParameters[reqDt]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("flowJob_stepTwo", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
                     log.info(">>>>> This is flowJob_stepTwo {}",requestDate);
@@ -59,7 +59,7 @@ public class FlowJobConfig {
 
     @Bean
     @JobScope
-    public Step stepThree(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Step stepThree(@Value("#{jobParameters[reqDt]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("flowJob_stepThree", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
                     log.info(">>>>> This is flowJob_stepThree {}",requestDate);

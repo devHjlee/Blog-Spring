@@ -29,7 +29,7 @@ public class SimpleJobConfig {
 
     @Bean
     @JobScope
-    public Step simpleStepOne(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Step simpleStepOne(@Value("#{jobParameters[reqDt]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("simpleStepOne", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
                     log.info(">>>>> This is simpleStepOne {}",requestDate);
