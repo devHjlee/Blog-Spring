@@ -1,5 +1,6 @@
 package com.springbatch.job;
 
+import com.springbatch.dto.BatchDto;
 import com.springbatch.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,25 +75,16 @@ public class CompositeJobConfig {
         return compositeItemWriter;
     }
 
-    private ItemWriter<MemberDto> updateGrade() {
+    private CustomBatchItemWriter updateGrade() {
         String sql = "update MEMBER set grade = :grade where id = :id";
-        return items -> {
-            JdbcBatchItemWriter<MemberDto> itemWriter = new JdbcBatchItemWriterBuilder<MemberDto>()
-                    .dataSource(dataSource)
-                    .sql(sql)
-                    .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                    .build();
 
-            for (MemberDto item : items) {
-                if (item.getMileage() > 10000) {
-                    item.setGrade("A");
-                } else if (item.getMileage() > 1000) {
-                    item.setGrade("B");
-                }
-            }
-            itemWriter.afterPropertiesSet();
-            itemWriter.write(items);
-        };
+        JdbcBatchItemWriter<MemberDto> itemWriter = new JdbcBatchItemWriterBuilder<MemberDto>()
+                .dataSource(dataSource)
+                .sql(sql)
+                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                .build();
+
+        return new CustomBatchItemWriter(itemWriter);
     }
 
     private ItemWriter<MemberDto> insertVIP() {
@@ -105,7 +97,10 @@ public class CompositeJobConfig {
                     .build();
 
             itemWriter.afterPropertiesSet();
-            itemWriter.write(new Chunk<MemberDto>(items.getItems().stream().filter(item -> item.getMileage() > 1000).collect(Collectors.toList())));
+            itemWriter.write(new Chunk<MemberDto>(items.getItems().stream()
+                    .filter(item -> item.getMileage() > 10000)
+                    .collect(Collectors.toList()))
+            );
         };
     }
 }

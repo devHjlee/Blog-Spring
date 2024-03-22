@@ -40,7 +40,6 @@ public class SimpleJobConfig {
     }
 
     @Bean
-    @JobScope
     public Step simpleStepTwo(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("simpleStepTwo", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {

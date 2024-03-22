@@ -1,6 +1,7 @@
 package com.springbatch.job;
 
 import com.springbatch.dto.BatchDto;
+import com.springbatch.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -73,14 +74,13 @@ public class JdbcJobConfig {
                     ps.setString(1, "SYSTEM");
                     ps.setLong(2, item.getId());
                 })
-
                 .assertUpdates(true)
                 .build();
     }
 
 //    @Bean
 //    public JdbcBatchItemWriter<BatchDto> jdbcItemWriter() {
-//        String sql = "UPDATE BATCH_TEST set name = '3' where id = :id";
+//        String sql = "UPDATE BATCH_TEST set name = 'SYSTEM' where id = :id";
 //        return new JdbcBatchItemWriterBuilder<BatchDto>().dataSource(dataSource)
 //                .sql(sql)
 //                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
