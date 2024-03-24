@@ -6,7 +6,6 @@ import lombok.*;
 @NoArgsConstructor( access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Setter
 @Table(name="BATCH_TEST")
 public class BatchEntity {
     @Id
@@ -16,6 +15,10 @@ public class BatchEntity {
 
     @Builder
     public BatchEntity(String name) {
+        this.name = name;
+    }
+
+    public void updateName(String name) {
         this.name = name;
     }
 }

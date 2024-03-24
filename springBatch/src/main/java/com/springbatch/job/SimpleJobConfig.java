@@ -18,21 +18,21 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
 @Configuration
-public class TestJobConfig {
+public class SimpleJobConfig {
     @Bean
-    public Job testJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new JobBuilder("testJob", jobRepository)
-                .start(testJobStepOne(null,jobRepository, transactionManager))
-                .next(testJobStepTwo(jobRepository, transactionManager))
+    public Job simpleJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new JobBuilder("simpleJob", jobRepository)
+                .start(simpleStepOne(null,jobRepository, transactionManager))
+                .next(simpleStepTwo(jobRepository, transactionManager))
                 .build();
     }
 
     @Bean
     @JobScope
-    public Step testJobStepOne(@Value("#{jobParameters[requestDate]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("testJobStepOne", jobRepository)
+    public Step simpleStepOne(@Value("#{jobParameters[reqDt]}") String requestDate, JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("simpleStepOne", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
-                    log.info(">>>>> This is testJobStepOne {}",requestDate);
+                    log.info(">>>>> This is simpleStepOne {}",requestDate);
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
@@ -40,11 +40,10 @@ public class TestJobConfig {
     }
 
     @Bean
-    @JobScope
-    public Step testJobStepTwo(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("testJobStepTwo", jobRepository)
+    public Step simpleStepTwo(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("simpleStepTwo", jobRepository)
                 .tasklet((StepContribution contribution, ChunkContext chunkContext) -> {
-                    log.info(">>>>> testJobStepTwo");
+                    log.info(">>>>> simpleStepTwo");
 
                     return RepeatStatus.FINISHED;
                 }, transactionManager)
