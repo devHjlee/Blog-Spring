@@ -23,11 +23,11 @@ public class FlowJobConfig {
     @Bean
     public Job flowJob(JobRepository jobRepository, Step stepOne, Step stepTwo, Step stepThree) {
         return new JobBuilder("flowJob", jobRepository)
-                .start(stepOne)
-                .on("*")
-                .to(stepTwo)
-                .from(stepOne).on("FAILED").to(stepThree)
-                .end()
+                .start(stepOne)                             // StepOne으로 시작
+                .on("*")                             // 모든 결과에 대해서
+                .to(stepTwo)                               // StepTwo로 이동
+                .from(stepOne).on("FAILED").to(stepThree)  // StepOne이 실패한 경우에만 StepThree로 이동
+                .end()                                     // Flow 종료
                 .build();
     }
 

@@ -11,19 +11,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-
 @RequiredArgsConstructor
 public class TestController {
     private final JobLauncher jobLauncher;
     private final JobRegistry jobRegistry;
 
     @RequestMapping("/test")
-    public String handle(@RequestParam String jobName,@RequestParam String reqDt) throws Exception {
+    public void test(@RequestParam String jobName,@RequestParam String reqDt) throws Exception {
         Job processJob = jobRegistry.getJob(jobName);
         JobParameters jobParameters = new JobParametersBuilder().addString("reqDt",reqDt).toJobParameters();
 
         jobLauncher.run(processJob, jobParameters);
-
-        return "Batch job has been invoked";
     }
 }
