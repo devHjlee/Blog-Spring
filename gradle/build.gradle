@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.gradle'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
@@ -22,4 +22,5 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	println '실행 단계에서 마지막에 실행된다.'
 }
