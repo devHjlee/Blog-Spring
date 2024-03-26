@@ -1,22 +1,37 @@
+// 외부 플러그인을 프로젝트에 적용하는 데 사용됩니다. 이 블록을 사용하여 프로젝트에 필요한 플러그인을 선언하고 버전을 지정할 수 있습니다.
+// 각 플러그인은 고유한 id로 식별됩니다. java, org.springframework.boot, io.spring.dependency-management
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'com.gradle'
-version = '0.0.2-SNAPSHOT'
+group = 'com.gradle' // 프로젝트 그룹
+version = '0.0.2-SNAPSHOT' // 프로젝트의 버전
 
-java {
+java { // Java 소스코드의 호환성 버전 설정
 	sourceCompatibility = '17'
 }
 
+// 프로젝트의 의존성을 해결하는 데 필요한 외부 저장소를 지정하는 데 사용됩니다.
+// 프로젝트에서 사용되는 라이브러리 및 플러그인의 찾을 위치를 지정 합니다.
 repositories {
 	mavenCentral()
+	google()
 }
 
+// 프로젝트가 의존하는 외부 라이브러리 및 모듈을 선언하는 데 사용됩니다.
+// 이 블록은 프로젝트가 컴파일되고 실행될 때 필요한 다른 라이브러리들과의 의존성을 명시적으로 정의합니다.
 dependencies {
+	// implementation: 프로덕션 코드에 필요한 의존성을 정의합니다.
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// compileOnly: 컴파일 시에만 필요한 의존성을 정의합니다. 런타임에는 필요하지 않습니다.
+	compileOnly 'org.projectlombok:lombok'
+	// runtimeOnly: 런타임 시에만 필요한 의존성을 정의합니다. 컴파일 시에는 필요하지 않습니다.
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	// annotationProcessor: 어노테이션 프로세서 의존성을 정의합니다. 주로 롬복과 같은 라이브러리를 사용할 때 필요합니다.
+	annotationProcessor 'org.projectlombok:lombok'
+	// testImplementation: 테스트 코드에 필요한 의존성을 정의합니다.
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
